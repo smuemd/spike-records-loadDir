@@ -8,7 +8,7 @@ This module loads (merges) all yaml or json files within a given directory (and 
 
 ```bash
 npm i spike-records -S
-npm i spike-records-loadDir -S
+npm i spike-records-loadir -S
 ```
 
 ## Usage in [spike's](https://github.com/static-dev/spike) app.js
@@ -16,7 +16,7 @@ npm i spike-records-loadDir -S
 ```js
 const standard = require('reshape-standard')
 const Records = require('spike-records')
-const Datadir = require('spike-records-loadDir');
+const Datadir = require('spike-records-loaddir');
 const locals = {}
 
 // Create a config instance
