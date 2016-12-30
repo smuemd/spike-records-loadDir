@@ -1,5 +1,5 @@
 {
-  "name": "spike-records-loadDir",
+  "name": "spike-records-loaddir",
   "description": "helper library to add directory of data files to spike records",
   "version": "1.1.0",
   "author": "smuemd",
