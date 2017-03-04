@@ -1,5 +1,7 @@
 # spike-records-loadDir
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/smuemd/spike-records-loadDir.svg)](https://greenkeeper.io/)
+
 Load a directory of local data files in yaml or json format into [spike-records](https://github.com/static-dev/spike-records)
 
 This module loads (merges) all yaml or json files within a given directory (and subdirectories) into a single data object (viewDat). This data object is updated with preference for the last merge over the first one. The recursive merge is implemented with [lodash](https://lodash.com/docs#merge).
