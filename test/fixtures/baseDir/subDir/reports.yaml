@@ -1,0 +1,36 @@
+view: 'test'
+data:
+  reports:
+    image:
+      url: '/img/tmp/browser-report.jpg'
+      caption: 'Discovergy Energiereport.'
+
+    # Page prose
+    # TODO: Prose urls
+    title: 'Alles auf einen Blick mit monatlichen Energiereports.'
+    subtitle: >
+              Erhalten Sie regelmäßig zusammengefasste Information über Ihren
+              Energieverbrauch. Ihr persönlicher Energiereport stellt die
+              Entwicklung Ihres Verbrauchs der letzten Wochen und Monate dar. Leicht
+              verständlich und übersichtlich.
+
+    # Page features
+    # TODO: Feature links
+    features:
+      - title: 'Energieverbrauch und Kosten unter Kontrolle.'
+        body: >
+              Ihren Energiereport erhalten sie jeden Monat. Damit kennen Sie nicht
+              nur Ihren Ver&shy;brauch, sondern auch die vorraus&shy;sicht&shy;lichen
+              Kosten am Jahresende. Hohe Nach&shy;zahl&shy;ungen an Ihren
+              Energie&shy;versorger gehören ab nun der Ver&shy;gangen&shy;heit an.
+
+      - title: 'Ihre Energie im Vergleich.'
+        body: >
+              Vergleichen Sie den Energiebedarf Ihres Hauses mit tausenden ähnlichen
+              Haushalten in Deutschland.
+
+      - title: 'Monatlicher Energiespartipp.'
+        body: >
+              Auf Basis Ihres individuellen Verbrauchs erhalten Sie mit jedem
+              Discovergy Energiereport  Tipps und Hinweise, wie Sie mit wenig
+              Aufwand Energie und Geld sparen.

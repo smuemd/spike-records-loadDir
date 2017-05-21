@@ -1,0 +1,13 @@
+view: 'test'
+data:
+  hero:
+    title: 'Intelligente Energie für Ihr Zuhause.'
+    tagline: 'Revolutionieren Sie Ihre Energieversogung mit Discovergy.'
+
+    # Call To action
+    button:
+      text: 'Jetzt loslegen.'
+      url: 'javascript:void(0);'
+    link:
+      text: 'oder Kontakt aufnehmen'
+      url: 'javascript:void(0);'

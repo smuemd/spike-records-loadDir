@@ -1,0 +1,17 @@
+view: 'test'
+data:
+  cta:
+    button:
+      text: 'Jetzt loslegen.'
+      url: 'javascript:void(0);'
+
+    # Prose
+    title: 'Gute Energie für ein schönes Zuhause.'
+    subtitle: >
+              Unsere Experten helfen Ihnen, Ihr Zuhause ein Stück besser zu machen
+              und begleiten Sie auf dem Weg in Ihre Energiezukunft.
+
+    # CTA link
+    link:
+      text: 'Beratungstermin vereinbaren'
+      url: 'javascript:void(0);'

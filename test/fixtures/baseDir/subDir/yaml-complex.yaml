@@ -1,0 +1,167 @@
+heat_template_version: 2014-10-16
+
+description: Simple template to deploy a single compute instance
+
+parameters:
+  key_name:
+    type: string
+    label: Key Name
+    description: Name of key-pair to be used for compute instance
+
+
+resources:
+
+  web_secgroup:
+    type: OS::Neutron::SecurityGroup
+    properties:
+      rules:
+        - protocol: tcp
+          remote_ip_prefix: 140.113.0.0/16
+          port_range_min: 80
+          port_range_max: 80
+        - protocol: tcp
+          remote_ip_prefix: 140.113.0.0/16
+          port_range_min: 443
+          port_range_max: 443
+        - protocol: tcp
+          remote_ip_prefix: 140.113.0.0/16
+          port_range_min: 22
+          port_range_max: 22
+        - protocol: tcp
+          port_range_min: 8080
+          port_range_max: 8080
+        - protocol: tcp
+          port_range_min: 465
+          port_range_max: 465
+        - protocol: tcp
+          port_range_min: 456
+          port_range_max: 456
+        - protocol: tcp
+          port_range_min: 25
+          port_range_max: 25
+        - protocol: tcp
+          port_range_min: 587
+          port_range_max: 587
+        - protocol: tcp
+          port_range_min: 143
+          port_range_max: 143
+        - protocol: tcp
+          port_range_min: 110
+          port_range_max: 110
+        - protocol: tcp
+          port_range_min: 995
+          port_range_max: 995
+        - protocol: tcp
+          port_range_min: 4505
+          port_range_max: 4506
+
+  internal_net:
+    type: OS::Neutron::Net
+
+  internal_subnet:
+    type: OS::Neutron::Subnet
+    properties:
+      network_id: { get_resource: internal_net }
+      cidr: "192.168.1.0/24"
+      dns_nameservers: [ "8.8.8.8", "8.8.8.4" ]
+      ip_version: 4
+
+  internal_router:
+    type: OS::Neutron::Router
+    properties:
+      external_gateway_info: { network: net04_ext }
+
+  internal_interface:
+    type: OS::Neutron::RouterInterface
+    properties:
+      router_id: { get_resource: internal_router }
+      subnet: { get_resource: internal_subnet }
+
+  instance_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_resource: internal_net }
+      security_groups:
+        - default
+        - { get_resource: web_secgroup }
+      fixed_ips:
+        - subnet_id: { get_resource: internal_subnet }
+
+  instance_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network: net04_ext
+      port_id: { get_resource: instance_port }
+
+  boot_volume:
+    type: OS::Cinder::Volume
+    properties:
+      size: 60
+      image: Ubuntu14.04
+
+  my_instance:
+    type: OS::Nova::Server
+    properties:
+      key_name: { get_param: key_name }
+      image: Ubuntu14.04
+      flavor: 2cores4GBmemory40GBdisk
+      networks:
+        - port: { get_resource:  instance_port }
+      block_device_mapping:
+        - device_name: vda
+          volume_id: { get_resource: boot_volume }
+          delete_on_termination: false
+      user_data_format: RAW
+      user_data:
+        get_resource: init_gitlab
+
+  gitlab_config_set:
+    type: OS::Heat::CloudConfig
+    properties:
+      cloud_config:
+        write_files:
+        - path: /etc/gitlab/gitlab.rb
+          permissions: '0755'
+          content:
+            str_replace:
+              template: |
+                external_url "https://$floating_ip$"
+                # GitLab Hostname for Git URLs
+                gitlab_rails['gitlab_host'] = '$floating_ip$'
+                gitlab_rails['gitlab_port'] = '443'
+                gitlab_rails['gitlab_https'] = 'true'
+                # SSH Setup
+                nginx['redirect_http_to_https'] = true
+                nginx['redirect_http_to_https_port'] = 80
+                nginx['ssl_certificate'] = "/etc/gitlab/ssl/gitlab.crt"
+                nginx['ssl_certificate_key'] = "/etc/gitlab/ssl/gitlab.key"
+                # Pretty Verification Emails
+                gitlab_rails['gitlab_email_from'] = 'gitlab@no-reply.com'
+                gitlab_rails['gitlab_email_display_name'] = 'GitLab'
+                logrotate['enable'] = false
+              params:
+                $floating_ip$: { get_attr: [instance_floating_ip, floating_ip_address] }
+        - path: /etc/stack_public_entry_point
+          permissions: '0755'
+          content:
+            str_replace:
+              template: |
+                $floating_ip$
+              params:
+                $floating_ip$: { get_attr: [instance_floating_ip, floating_ip_address] }
+
+  reset_gitlab:
+    type: OS::Heat::SoftwareConfig
+    properties:
+      config: |
+        #!/bin/bash
+        apt-get -y install curl openssh-server ca-certificates postfix
+        curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh | bash
+        apt-get -y install gitlab-ce
+        gitlab-ctl reconfigure
+
+  init_gitlab:
+    type: OS::Heat::MultipartMime
+    properties:
+      parts:
+      - config: { get_resource: reset_gitlab }

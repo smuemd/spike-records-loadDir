@@ -1,0 +1,32 @@
+view: 'test'
+data:
+  iq:
+    image:
+      url: '/img/tmp/slp-meter.jpg'
+      caption: 'SLP Stromzähler'
+
+    # Page prose
+    # TODO: prose urls
+    title: 'Intelligente Technik für gute Energie zuhause.'
+    subtitle: >
+              Discovergy ersetzt Ihren alten Stromzähler durch ein intelligentes
+              System. Erfassen Sie Ihren Verbrauch ab sofort in Echtzeit.
+              So erhalten Sie die volle Kontrolle über Ihre Energieversorgung.
+
+    # Page features
+    # TODO: Feature links
+    features:
+      - title: 'Reibungsloser Wechsel.'
+        body: >
+              Bestellen Sie Ihren intelligenten Stromzähler bequem auf unserer
+              Webseite. Der Austausch Ihres alten Zählers durch unseren
+              Elektroinstallateur erfolgt an Ihrem Wunschtermin und dauert
+              nicht länger als 1 Stunde.
+
+      - title: 'Intelligente Zähler können reden.'
+        body: >
+              Ihr neuer Zähler kommuniziert mit Ihnen über das Internet. Nutzen Sie
+              einfach Ihren bestehenden Internetanschluss. Das ist preiswert,
+              bequem und sicher.
+      - title: 'this is a third'
+        body: 'does ist merge?'

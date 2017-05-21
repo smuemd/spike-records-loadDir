@@ -1,0 +1,14 @@
+types:
+  - type: &grass
+    name: "Grass"
+    advantages: []
+moves:
+  - move: &vinewhip
+    power: 40
+    type: *grass
+
+pokemon:
+  - pokemon: &bulbasaur
+    type1: *grass
+    moveset:
+      - move: {level: 5, move: *vinewhip}
