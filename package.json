@@ -8,6 +8,7 @@
     "verbose": "true",
     "serial": "true"
   },
+  "main": "lib",
   "scripts": {
     "coverage": "nyc --reporter=html ava && open coverage/index.html",
     "coveralls": "nyc --reporter=lcov ava && cat ./coverage/lcov.info | coveralls",

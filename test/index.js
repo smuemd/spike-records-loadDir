@@ -1,13 +1,13 @@
 const test = require('ava')
 const fs = require('fs')
 const glob = require('glob')
-const DataDir = require('../index.js')
+const DataSrc = require('../lib')
 const path = require('path')
 
 test('read and parse markdown files', t => {
-  let mdFrontMatter = new DataDir()
-  let mdNoFrontMatter = new DataDir()
-  let mdFrontMatterNoBody = new DataDir()
+  let mdFrontMatter = new DataSrc()
+  let mdNoFrontMatter = new DataSrc()
+  let mdFrontMatterNoBody = new DataSrc()
 
   mdFrontMatter.source('./test/fixtures/baseDir/subDir/lang-yaml.md')
   mdFrontMatter.file = mdFrontMatter.get()
@@ -56,8 +56,8 @@ test('read and parse markdown files', t => {
 })
 
 test('read and parse yaml files', t => {
-  let yaml = new DataDir()
-  let yml = new DataDir()
+  let yaml = new DataSrc()
+  let yml = new DataSrc()
 
   yaml.source('./test/fixtures/baseDir/subDir/test.yaml')
   yaml.file = yaml.get()
@@ -78,7 +78,7 @@ test('read and parse yaml files', t => {
 })
 
 test('read and parse json files', t => {
-  let json = new DataDir() // TODO: rename DataDir to DataSource
+  let json = new DataSrc() // TODO: rename DataSrc to DataSource
 
   json.source('./test/fixtures/baseDir/subDir/pet-of-the-day.json')
   json.file = json.get()
@@ -90,7 +90,7 @@ test('read and parse json files', t => {
 })
 
 test('read and parse single directory', t => {
-  let subDirSubDir = new DataDir()
+  let subDirSubDir = new DataSrc()
   subDirSubDir.source('./test/fixtures/baseDir/subDir/subDirSubDir')
   subDirSubDir.data = subDirSubDir.get()
   t.deepEqual(
@@ -114,7 +114,7 @@ test('read and parse single directory', t => {
 })
 
 test('read and parse nested directories', t => {
-  let baseDir = new DataDir()
+  let baseDir = new DataSrc()
   baseDir.source('./test/fixtures/baseDir')
   baseDir.data = baseDir.get()
 
