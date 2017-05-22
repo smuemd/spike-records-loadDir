@@ -1,6 +1,6 @@
 # spike-records-loadDir
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/smuemd/spike-records-loadDir.svg)](https://greenkeeper.io/)
+[![Greenkeeper badge](https://badges.greenkeeper.io/smuemd/spike-records-loadDir.svg)](https://greenkeeper.io/) [![Coverage Status](https://coveralls.io/repos/github/smuemd/spike-records-loadDir/badge.svg?branch=master)](https://coveralls.io/github/smuemd/spike-records-loadDir?branch=master)
 
 Load a directory of local data files in yaml or json format into [spike-records](https://github.com/static-dev/spike-records)
 
