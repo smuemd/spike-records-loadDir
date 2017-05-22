@@ -3,12 +3,11 @@
   "description": "helper library to add directory of data files to spike records",
   "version": "1.2.0",
   "author": "smuemd",
-  "main": "index.js",
+  "main": "lib",
   "ava": {
     "verbose": "true",
     "serial": "true"
   },
-  "main": "lib",
   "scripts": {
     "coverage": "nyc --reporter=html ava && open coverage/index.html",
     "coveralls": "nyc --reporter=lcov ava && cat ./coverage/lcov.info | coveralls",
@@ -46,6 +45,7 @@
     "husky": "^0.13.3",
     "lint-staged": "^3.4.2",
     "nyc": "^10.3.2",
+    "snazzy": "^7.0.0",
     "standard": "^10.0.2"
   }
 }
