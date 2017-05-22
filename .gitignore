@@ -1,2 +1,4 @@
 _old.js
 node_modules
+coverage
+.nyc_output
