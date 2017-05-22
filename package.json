@@ -10,7 +10,7 @@
   },
   "scripts": {
     "coverage": "nyc --reporter=html ava && open coverage/index.html",
-    "coveralls": "nyc --reporter=lcov ava && cat ./coverage/lcov.info | coveralls",
+    "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
     "fmt": "prettier-standard",
     "lint": "standard --verbose | snazzy",
     "precommit": "lint-staged",
