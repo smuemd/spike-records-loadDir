@@ -21,6 +21,7 @@
     "linters": {
       "test/*.js": [
         "prettier-standard",
+        "standard",
         "git add"
       ]
     }
