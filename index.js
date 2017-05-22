@@ -2,101 +2,117 @@
 // http://stackoverflow.com/questions/10049557/reading-all-files-in-a-directory-store-them-in-objects-and-send-the-object
 // http://stackoverflow.com/questions/31365296/get-all-json-files-from-node-folder-and-find-specific-attr-inside
 
-var glob = require('glob')
-var path = require('path')
-var fs = require('fs')
-var jsyaml = require('js-yaml')
-var _ = require('lodash')
+const glob = require('glob')
+const path = require('path')
+const fs = require('fs')
+const jsyaml = require('js-yaml')
+const slugify = require('slugify')
+const preliminaries = require('preliminaries')(true)
+require('preliminaries-parser-yaml')(true)
 
-function Datadir () {
-  var viewDat = {}
+function DataSource () {
+  const files = []
 
   /**
-   * Get the view data object.
+   * Get the array of data objects or get single data object.
+   * @return {Array}
    * @return {Object}
-   *    view data object resulting from merging local files and / or directories.
+   *    Array of data objects resulting from parsing
+   *    local .yaml, .json and .md files and / or directories.
    */
   function get () {
-    return viewDat
+    if (files.length === 1) {
+      return files[0]
+    } else {
+      return files
+    }
   }
 
   /**
-   * Merge a local data file: either a json (with .json extension) or yaml (with either .yml or .yaml extension).
+   * Load and parse a local data file
+   * Store data extracted from parsed file as an object in the data array.
    *
-   * @param {String} configFile
-   *    Path to the configuration file.
+   * @param {String} filePath
+   *    Path to the data file.
+   *    Expexts file with .md, yaml, .yml, or .json file extension
    */
   function loadFile (filePath) {
-    var mergeObj
+    var file
     var fileExtension = path.extname(filePath)
 
     switch (fileExtension) {
-
       case '.yml':
       case '.yaml':
         try {
-          var yamlData = jsyaml.safeLoad(
-            fs.readFileSync(filePath, 'utf8'), { json: false }
-          )
-          if (yamlData.view && yamlData.data) {
-            mergeObj = {}
-            mergeObj[yamlData.view] = yamlData.data
-            // console.log(filePath, ': found data => merging into viewDat')
-          } else { mergeObj = yamlData }
-        } catch (e) { console.log(e) }
+          file = jsyaml.safeLoad(fs.readFileSync(filePath, 'utf8'), {
+            json: false
+          })
+        } catch (e) {
+          console.log(e)
+        }
         break
 
       case '.json':
         try {
-          var jsonData = JSON.parse(
-            fs.readFileSync(filePath, 'utf8')
-          )
-          if (jsonData.view && jsonData.data) {
-            mergeObj = {}
-            mergeObj[jsonData.view] = jsonData.data
-            // console.log(filePath, ': found data => merging into viewDat')
-          } else { mergeObj = jsonData }
-        } catch (e) { console.log(e) }
+          file = JSON.parse(fs.readFileSync(filePath, 'utf8'))
+        } catch (e) {
+          console.log(e)
+        }
+        break
+
+      case '.md':
+        try {
+          file = preliminaries.parse(fs.readFileSync(filePath, 'utf8'))
+        } catch (e) {
+          console.log(e)
+        }
         break
 
       default:
-        console.log(filePath, ': no yaml or json file')
+        console.log(filePath, ': no yaml, json or markdown file')
         break
     }
-    mergeObj ? _.merge(viewDat, mergeObj) : console.log(filePath, ': no data merge')
+    // Always add file meta info to file.data
+    if (!file.data) {
+      file['data'] = {}
+    }
+    file.data['_path'] = filePath
+    file.data['_fileName'] = path.basename(filePath)
+    file.data['_slug'] = slugify(path.basename(filePath, fileExtension))
+
+    // Add path and slug properties to fileData object
+    files.push(file)
   }
 
- /**
-  * Merge a local data directory by merging all the data files in the directory
-  * and sub directories.
+  /**
+  * Load a directory with data files.
+  * Create array with file paths of all .y*ml, json, and .md files found in the directory
+  * and its subdirectories.
   *
   * @param {String} configDir
-  *    Path to the configuration directory.
+  *    Path to the directory containing data files.
   */
   function loadDir (dirPath) {
     // var items = fs.readdirSync(dirPath)
     var yamlFiles = glob.sync(path.join(dirPath, '**/*.y*ml'))
     var jsonFiles = glob.sync(path.join(dirPath, '**/*.json'))
-    var items = yamlFiles.concat(jsonFiles)
-    // console.log(items.sort())
+    var markdownFiles = glob.sync(path.join(dirPath, '**/*.md'))
+    var items = markdownFiles.concat(jsonFiles, yamlFiles)
+
     items.sort().forEach(function (itemPath) {
-      // var itemPath = path.join(dirPath, item)
       var itemStats = fs.statSync(itemPath)
       if (itemStats.isFile()) {
-        // console.log('file: ', itemPath)
         loadFile(itemPath)
       }
       if (itemStats.isDirectory()) {
-        console.log('directory: ', itemPath)
-        // loadDir(itemPath)
+        loadDir(itemPath)
       }
     })
   }
 
   /**
    * Merge data from a local data file, or from  multiple data files inside a
-   * directory and subdirectories. It supports either JSON files (*.json) or
-   * YML files (*.yaml / *.yml).
+   * directory and its subdirectories. Expects eitehr .md, .json, or .yaml or .yml files.
    *
    * @param {String} filePath
    *    Path to the configuration file or configuration directory.
@@ -108,9 +124,11 @@ function Datadir () {
       var stats = fs.statSync(sourcePath)
       if (stats.isDirectory()) {
         loadDir(sourcePath)
-      } else if (stats.isFile()) {
+      }
+      if (stats.isFile()) {
         loadFile(sourcePath)
-      } else if (!fs.existsSync(sourcePath)) {
+      }
+      if (!fs.existsSync(sourcePath)) {
         console.log('error: path not valid')
       }
     } catch (e) {
@@ -127,4 +145,4 @@ function Datadir () {
 /**
  * Export Viewdata class.
  */
-module.exports = Datadir
+module.exports = DataSource
