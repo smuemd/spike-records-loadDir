@@ -41,7 +41,7 @@
     "helper"
   ],
   "devDependencies": {
-    "ava": "^0.19.1",
+    "ava": "^0.22.0",
     "coveralls": "^2.13.1",
     "husky": "^0.14.3",
     "lint-staged": "^4.1.3",
