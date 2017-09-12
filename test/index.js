@@ -4,6 +4,7 @@ const glob = require('glob')
 const DataSrc = require('../lib')
 const path = require('path')
 
+// test
 test('read and parse markdown files', t => {
   let mdFrontMatter = new DataSrc()
   let mdNoFrontMatter = new DataSrc()
