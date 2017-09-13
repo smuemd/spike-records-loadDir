@@ -5,6 +5,16 @@ const DataSrc = require('../lib')
 const path = require('path')
 
 // test
+test('new api source function only works', t => {
+  let someFiles = new DataSrc()
+  let mdown = new DataSrc()
+  let res = someFiles.source('./test/fixtures/baseDir')
+  let resII = mdown.source('./test/fixtures/baseDir/subDir/lang-yaml.md')
+  console.log(res)
+  if (resII.excerpt) { console.log(resII) }
+  t.is(res.length, 21)
+  t.falsy(resII.excerpt)
+})
 test('read and parse markdown files', t => {
   let mdFrontMatter = new DataSrc()
   let mdNoFrontMatter = new DataSrc()
@@ -46,7 +56,7 @@ test('read and parse markdown files', t => {
   mdFrontMatterNoBody.file = mdFrontMatterNoBody.get()
   t.deepEqual(
     Object.keys(mdFrontMatterNoBody.file).length,
-    2,
+    3,
     'object should not have data and content attributes'
   )
   t.deepEqual(
