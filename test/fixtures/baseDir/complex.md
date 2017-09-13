@@ -117,7 +117,7 @@ sharing:
 
 ## YAML Front Matter
 Add YAML front matter to documents to extend the metadata that is supplied to your project's templates.
-
+<!-- end-excerpt -->
 ```yaml
 ---
 username: jonschlinkert
