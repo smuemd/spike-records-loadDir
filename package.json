@@ -29,7 +29,7 @@
   "license": "ISC",
   "dependencies": {
     "glob": "^7.1.2",
-    "gray-matter": "^3.0.3",
+    "gray-matter": "^4.0.1",
     "js-yaml": "^3.8.4",
     "slugify": "^1.1.0"
   },
